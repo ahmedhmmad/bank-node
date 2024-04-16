@@ -1,5 +1,7 @@
 const express = require('express');
-const loginRouter=require('./routes/login')
+const loginRouter=require('./routes/login');
+const registerRouter=require('./routes/register');
+const { register } = require('module');
 
 
 const app = express();
@@ -8,6 +10,7 @@ const app = express();
 app.use(express.json());
 
 app.use('/api/v1/login',loginRouter);
+app.use('/api/v1/register',registerRouter)
 
 
 // Start the server

@@ -3,9 +3,7 @@ const db = require('../utils/db');
 const bcrypt = require('bcrypt');
 const { rejects } = require('assert');
 
-
 const router = express.Router();
-
 
 router.post('/',async(req,res)=>{
     console.log('Connecting....')
