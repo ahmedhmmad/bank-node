@@ -7,8 +7,9 @@ const router = express.Router();
 
 
 // Register route
-router.post('/register', async (req, res) => {
+router.post('/', async (req, res) => {
     const { username, password, role } = req.body;
+    
 
     try {
         
