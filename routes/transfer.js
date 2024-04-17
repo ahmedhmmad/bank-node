@@ -13,17 +13,19 @@ router.post('/', async (req, res) => {
         const senderAccount = await getAccountById(connection, senderId);
         const receiverAccount = await getAccountById(connection, receiverId);
 
+        // Calculate transfer fee (1% of the transfer amount)
+        const transferFee = amount * 0.01;
+
         if (!senderAccount || !receiverAccount) {
             return res.status(404).json({ message: "Sender or receiver account not found" });
         }
 
         // Check if the sender has sufficient balance for the transfer
-        if (senderAccount.balance < amount) {
+        if (senderAccount.balance < (amount +transferFee)) {
             return res.status(400).json({ message: "Insufficient balance for transfer" });
         }
 
-        // Calculate transfer fee (1% of the transfer amount)
-        const transferFee = amount * 0.01;
+        
 
         // Deduct transfer amount plus fee from sender's balance
         const updatedSenderBalance = senderAccount.balance - amount - transferFee;
