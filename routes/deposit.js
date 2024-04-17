@@ -4,7 +4,7 @@ const db = require('../utils/db');
 const router = express.Router();
 
 // Deposit route
-router.post('/deposit', async (req, res) => {
+router.post('/', async (req, res) => {
     const { customerId, amount } = req.body;
 
     try {
@@ -26,4 +26,29 @@ router.post('/deposit', async (req, res) => {
     }
 });
 
+// Function to retrieve customer's current balance from the database
+const getCustomerBalance = async (connection, customerId) => {
+    return new Promise((resolve, reject) => {
+        connection.query('SELECT balance FROM customers WHERE customer_id = ?', [customerId], (error, result) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(result[0].balance);
+            }
+        });
+    });
+};
+
+// Function to update customer's balance in the database
+const updateCustomerBalance = async (connection, customerId, newBalance) => {
+    return new Promise((resolve, reject) => {
+        connection.query('UPDATE customers SET balance = ? WHERE customer_id = ?', [newBalance, customerId], (error, result) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve();
+            }
+        });
+    });
+};
 module.exports = router;
