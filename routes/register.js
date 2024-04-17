@@ -9,6 +9,7 @@ const router = express.Router();
 // Register route
 router.post('/', async (req, res) => {
     const { username, password, role } = req.body;
+    
 
     try {
         
