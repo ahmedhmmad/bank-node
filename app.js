@@ -8,6 +8,7 @@ const { register } = require('module');
 
 
 const app = express();
+const port=process.env.port || 3000;
 
 
 app.use(express.json());
@@ -20,7 +21,7 @@ app.use('/api/v1/transfer',transferRouter);
 
 
 // Start the server
-const PORT = 3000;
-app.listen(PORT, () => {
-    console.log(`App is running on port ${PORT}`);
+// const PORT = 3000;
+app.listen(port, () => {
+    console.log(`App is running on port ${port}`);
 });
