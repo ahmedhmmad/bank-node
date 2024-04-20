@@ -1,5 +1,6 @@
 const express = require('express');
 const db = require('../utils/db');
+const customerController=require('../controllers/customerController')
 
 const router = express.Router();
 
@@ -10,8 +11,8 @@ router.post('/', async (req, res) => {
     try {
         // Fetch sender and receiver account details from the database
         const connection = await db.getConnection();
-        const senderAccount = await getAccountById(connection, senderId);
-        const receiverAccount = await getAccountById(connection, receiverId);
+        const senderAccount = await customerController.getAccountById(connection, senderId);
+        const receiverAccount = await customerController.getAccountById(connection, receiverId);
 
         // Calculate transfer fee (1% of the transfer amount)
         const transferFee = amount * 0.01;
@@ -22,7 +23,7 @@ router.post('/', async (req, res) => {
 
         // Check if the sender has sufficient balance for the transfer
         if (senderAccount.balance < (amount +transferFee)) {
-            return res.status(400).json({ message: "Insufficient balance for transfer" });
+            return res.status(400).json({ message: "Insufficient balance for transfer👌" });
         }
 
         
@@ -34,8 +35,8 @@ router.post('/', async (req, res) => {
         const updatedReceiverBalance = receiverAccount.balance + amount;
 
         // Update sender and receiver account balances in the database
-        await updateAccountBalance(connection, senderId, updatedSenderBalance);
-        await updateAccountBalance(connection, receiverId, updatedReceiverBalance);
+        await customerController.updateAccountBalance(connection, senderId, updatedSenderBalance);
+        await customerController.updateAccountBalance(connection, receiverId, updatedReceiverBalance);
 
         connection.release();
 
@@ -46,30 +47,31 @@ router.post('/', async (req, res) => {
     }
 });
 
-// Function to fetch account details by Customer ID
-const getAccountById = async (connection, accountId) => {
-    return new Promise((resolve, reject) => {
-        connection.query('SELECT * FROM customers WHERE customer_id = ?', [accountId], (error, results) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve(results[0]);
-            }
-        });
-    });
-};
 
-// Function to update customer balance
-const updateAccountBalance = async (connection, accountId, newBalance) => {
-    return new Promise((resolve, reject) => {
-        connection.query('UPDATE customers SET balance = ? WHERE customer_id = ?', [newBalance, accountId], (error) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve();
-            }
-        });
-    });
-};
+// // Function to fetch account details by Customer ID
+// const getAccountById = async (connection, accountId) => {
+//     return new Promise((resolve, reject) => {
+//         connection.query('SELECT * FROM customers WHERE customer_id = ?', [accountId], (error, results) => {
+//             if (error) {
+//                 reject(error);
+//             } else {
+//                 resolve(results[0]);
+//             }
+//         });
+//     });
+// };
+
+// // Function to update customer balance
+// const updateAccountBalance = async (connection, accountId, newBalance) => {
+//     return new Promise((resolve, reject) => {
+//         connection.query('UPDATE customers SET balance = ? WHERE customer_id = ?', [newBalance, accountId], (error) => {
+//             if (error) {
+//                 reject(error);
+//             } else {
+//                 resolve();
+//             }
+//         });
+//     });
+// };
 
 module.exports = router;
