@@ -19,7 +19,7 @@ async getById (id)
     const [row]=connection.query('SELECT * FROM users WHERE id=?',[id]);
     connection.release();
     if(row.length === 0) return null;
-    //const{id:userId,username,password,}
+    
 
 }
 
