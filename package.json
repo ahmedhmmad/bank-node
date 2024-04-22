@@ -4,7 +4,7 @@
   "description": "StorykApp Internship",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --watchall",
     "start": "nodemon app.js"
   },
   "author": "Ahmed Hammad",
@@ -12,8 +12,12 @@
   "dependencies": {
     "bcrypt": "^5.1.1",
     "express": "^4.19.2",
+    "jest": "^29.7.0",
     "jsonwebtoken": "^9.0.2",
     "mysql": "^2.18.1",
     "nodemon": "^3.1.0"
+  },
+  "devDependencies": {
+    "supertest": "^6.3.4"
   }
 }

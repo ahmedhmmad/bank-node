@@ -25,3 +25,6 @@ app.use('/api/v1/transfer',transferRouter);
 app.listen(port, () => {
     console.log(`App is running on port ${port}`);
 });
+
+
+module.exports = app;
