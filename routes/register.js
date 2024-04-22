@@ -52,6 +52,19 @@ const saveUser = async (connection, username, password, role) => {
 };
 
 // Function to get the insert query for additional user information based on role
+// const getInsertQueryForRole = (role) => {
+//     switch (role) {
+//         case 'admin':
+//             return 'INSERT INTO admins (user_id) VALUES (?)';
+//         case 'clerk':
+//             return 'INSERT INTO clerks (user_id) VALUES (?)';
+//         case 'customer':
+//             return 'INSERT INTO customers (user_id) VALUES (?)';
+//         default:
+//             return null;
+//     }
+// };
+// Function to get the insert query for additional user information based on role
 const getInsertQueryForRole = (role) => {
     switch (role) {
         case 'admin':
@@ -59,10 +72,11 @@ const getInsertQueryForRole = (role) => {
         case 'clerk':
             return 'INSERT INTO clerks (user_id) VALUES (?)';
         case 'customer':
-            return 'INSERT INTO customers (user_id) VALUES (?)';
+            return 'INSERT INTO customers (user_id, balance) VALUES (?, 0.00)';
         default:
             return null;
     }
 };
+
 
 module.exports = router;
