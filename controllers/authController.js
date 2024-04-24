@@ -43,6 +43,30 @@ const register= async (req, res) => {
     const { username, password, role } = req.body;
 
     try {
+        //check autherization header content
+        if(!req.headers.authorization)
+        {
+           return res.status(401).json({message:"Autherization header is missing"});
+        }
+        //Get the User role from token
+        const token = req.headers.authorization.split(' ')[1]; 
+        try{
+            const decodedToken = jwt.verify(token, 'your_secret_value_here');
+            const userRole = decodedToken.role;
+
+            //check if user is Admin
+            if(userRole !=='admin')
+            {
+                return res.status(403).json({message:"Only admins can register"})
+            }
+            
+        }catch(err)
+        {
+            return res.status(401).json({message:"Invalid JWT token"});
+        }
+        
+
+       
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
 
