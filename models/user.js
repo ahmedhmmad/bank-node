@@ -1,27 +1,21 @@
-//models/User.js
+const db = require('../utils/db');
 
-const db= require('../utils/db');
-
-
-class User{
-    constructor(id,username,password,role)
-    {
-        this.id=id;
-        this.username=username;
-        this.password=password;
-        this.role=role;
+class User {
+    constructor(id, username, password, role) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.role = role;
     }
 
+    static getAccountById(id) {
+        return db.execute(`SELECT * FROM users WHERE id = ${id}`);
+    }
 
-async getById (id)
-{
-    const connection=await db.getConnection();
-    const [row]=connection.query('SELECT * FROM users WHERE id=?',[id]);
-    connection.release();
-    if(row.length === 0) return null;
-    
-
+    static getCustomerAccountById(id) {
+        console.log(`SELECT * FROM customers WHERE user_id = ${id}`);
+        return db.execute(`SELECT * FROM customers WHERE user_id = ${id}`);
+    }
 }
 
-
-}
+module.exports = User;
