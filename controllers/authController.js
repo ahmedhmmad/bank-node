@@ -10,9 +10,9 @@ const login=async(req,res)=>{
     //console.log(req.body);
 
     try{
-        const connection= await db.getConnection();
-        const user= await getUserByusername(connection,username);
-        connection.release();
+       // const connection= await db.getConnection();
+        const user= await getUserByusername(username);
+        //connection.release();
 
         
         const MatchedPassword = await bcrypt.compare(password, user.password);
@@ -72,7 +72,7 @@ const register= async (req, res) => {
 
         // Save the user to the database
         const connection = await db.getConnection();
-        await saveUser(connection, username, hashedPassword, role);
+        await saveUser(username, hashedPassword, role);
         connection.release();
 
         res.status(201).json({ message: "User registered successfully" });
@@ -83,30 +83,24 @@ const register= async (req, res) => {
 }
 
 // Function to save user to the database
-const saveUser = async (connection, username, password, role) => {
-    return new Promise((resolve, reject) => {
+const saveUser = async (username, password, role) => {
+    try {
         // Insert user into the users table
-        connection.query('INSERT INTO users (username, password, role) VALUES (?, ?, ?)', [username, password, role], (error, result) => {
-            if (error) {
-                reject(error);
-            } else {
-                // Depending on the role, insert additional information into the corresponding table
-                const insertQuery = getInsertQueryForRole(role);
-                if (insertQuery) {
-                    connection.query(insertQuery, [result.insertId], (err, res) => {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            resolve();
-                        }
-                    });
-                } else {
-                    // If role is not recognized, resolve immediately
-                    resolve();
-                }
-            }
-        });
-    });
+        const [insertResult] = await db.execute('INSERT INTO users (username, password, role) VALUES (?, ?, ?)', [username, password, role]);
+        
+        // Insert According to user Role
+        const insertQuery = getInsertQueryForRole(role);
+        if (insertQuery) {
+            const [additionalInsertResult] = await db.execute(insertQuery, [insertResult.insertId]);
+          
+        }
+
+      
+        return;
+    } catch (error) {
+        console.error('Error saving user:', error);
+        throw error; 
+    }
 };
 
 const getInsertQueryForRole = (role) => {
@@ -123,18 +117,22 @@ const getInsertQueryForRole = (role) => {
 };
 
 
-const getUserByusername = async (connection, username) => {
-    
-    return new Promise((resolve, reject) => {
-        connection.query('SELECT * FROM users WHERE username=?', [username], (error, result) => {
-            if (error) {
-                //console.log(`Error executing query: ${error}`);
-                reject(error);
-            } else {
-                //console.log(`Query result for ${username}:`, result);
-                resolve(result[0]);
-            }
-        })})};
+const getUserByusername = async (username) => {
+    try {
+        const [rows, fields] = await db.execute('SELECT * FROM users WHERE username = ?', [username]);
+        
+        if (rows.length > 0) {
+            return rows[0]; // Return the first user found (assuming username is unique)
+        } else {
+            return null; // User not found
+        }
+    } catch (error) {
+        console.error('Error fetching user by username:', error);
+        throw error; // Propagate the error back to the caller
+    }
+};
+
+       
 
 
 module.exports={login,register}
