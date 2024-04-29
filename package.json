@@ -4,7 +4,7 @@
   "description": "StorykApp Internship",
   "main": "app.js",
   "scripts": {
-    "test": "jest --watchall",
+    "test": "jest --watchAll",
     "start": "nodemon app.js"
   },
   "author": "Ahmed Hammad",
@@ -20,5 +20,8 @@
   "devDependencies": {
     "mysql2": "^3.9.7",
     "supertest": "^6.3.4"
+  },
+  "transform": {
+    "^.+\\.jsx?$": "babel-jest"
   }
 }
