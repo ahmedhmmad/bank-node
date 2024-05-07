@@ -4,13 +4,13 @@ const registerRouter=require('./routes/register');
 const depositeRouter=require('./routes/deposit');
 const withdrawalRouter=require('./routes/withdrawal');
 const transferRouter=require('./routes/transfer');
-
+const cors = require('cors');
 
 
 const app = express();
 const port=process.env.port || 5000;
 
-
+app.use(cors());
 app.use(express.json());
 
 app.use('/api/v1/login',loginRouter);
