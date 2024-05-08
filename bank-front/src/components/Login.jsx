@@ -17,7 +17,7 @@ const Login = () => {
       // Store the token in localStorage
       localStorage.setItem('accessToken', accessToken);
 
-      // Handle successful login (e.g., redirect to another page)
+      // Handle successful login
       console.log('Login successful!');
       setMessage(`Logged Successfully and your Token is Stored`);
     } catch (error) {
