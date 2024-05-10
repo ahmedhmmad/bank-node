@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './login.module.css';
+import { useHistory } from 'react-router-dom'; // Import useHistory
+import Header from '../components/Header.jsx';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState(null);
+  const history = useHistory(); // Initialize useHistory
 
   const handleLogin = async (e) => {
     e.preventDefault(); 
@@ -20,6 +22,9 @@ const Login = () => {
       // Handle successful login
       console.log('Login successful!');
       setMessage(`Logged Successfully and your Token is Stored`);
+
+      // Redirect to dashboard page after successful login
+      history.push('/dashboard'); 
     } catch (error) {
       setMessage('Invalid Username or Password');
       console.error('Login error:', error);
@@ -28,6 +33,7 @@ const Login = () => {
 
   return (
     <div>
+      <Header/>
       <h2>Login</h2>
       <form onSubmit={handleLogin}>
         <div>
