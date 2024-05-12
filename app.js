@@ -1,6 +1,7 @@
 const express = require('express');
 const loginRouter=require('./routes/login');
 const registerRouter=require('./routes/register');
+const userRoleRouter=require('./routes/user-role')
 const depositeRouter=require('./routes/deposit');
 const withdrawalRouter=require('./routes/withdrawal');
 const transferRouter=require('./routes/transfer');
@@ -18,6 +19,7 @@ app.use('/api/v1/register',registerRouter);
 app.use('/api/v1/deposite',depositeRouter);
 app.use('/api/v1/withdrawal',withdrawalRouter);
 app.use('/api/v1/transfer',transferRouter);
+app.use('/api/v1/user-role',userRoleRouter);
 
 
 // Start the server
