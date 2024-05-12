@@ -1,30 +1,34 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useHistory } from 'react-router-dom'; // Import useHistory
 import Header from '../components/Header.jsx';
+import styles from './login.module.css'; 
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState(null);
-  const history = useHistory(); // Initialize useHistory
 
   const handleLogin = async (e) => {
     e.preventDefault(); 
 
     try {
-      const response = await axios.post('http://127.0.0.1:5000/api/v1/login', { username, password });
+      const response = await axios.post('http://127.0.0.1:3000/api/v1/login', { username, password });
       const accessToken = response.data.accessToken;
 
       // Store the token in localStorage
       localStorage.setItem('accessToken', accessToken);
 
-      // Handle successful login
-      console.log('Login successful!');
-      setMessage(`Logged Successfully and your Token is Stored`);
+      // Fetch user role
+      const roleResponse = await axios.get('http://127.0.0.1:3000/api/v1/user-role', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      });
 
-      // Redirect to dashboard page after successful login
-      history.push('/dashboard'); 
+      const userRole = roleResponse.data.role;
+
+      // Redirect to dashboard page with user role
+      window.location.href = `/dashboard?role=${userRole}`; 
     } catch (error) {
       setMessage('Invalid Username or Password');
       console.error('Login error:', error);
@@ -32,21 +36,23 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <Header/>
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <div>
-          <label>Username:</label>
-          <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        </div>
-        <button type="submit">Login</button>
-      </form>
-      {message && <p style={{ color: 'red' }}>{message}</p>}
+    <div className={styles['login-container']}>
+      <Header />
+      <div className={styles['login-form']}>
+        <h2>Login</h2>
+        <form onSubmit={handleLogin}>
+          <div>
+            <label>Username:</label>
+            <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+          </div>
+          <div>
+            <label>Password:</label>
+            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          </div>
+          <button type="submit">Login</button>
+        </form>
+        {message && <p className={styles['error-message']}>{message}</p>}
+      </div>
     </div>
   );
 };

@@ -31,7 +31,8 @@ const login=async(req,res)=>{
 
 
         const accessToken = jwt.sign({ username: user.username, role: user.role }, accessTokenSecret);
-        return res.status(200).json({ accessToken });
+        // return res.status(200).json({ accessToken });
+        res.status(200).json({ accessToken, redirect: '/dashboard' });
         }
     } catch (error) {
         console.error('Error logging in:', error);
