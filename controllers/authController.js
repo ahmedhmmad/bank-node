@@ -30,9 +30,20 @@ const login=async(req,res)=>{
         const accessTokenSecret = 'your_secret_value_here';
 
 
-        const accessToken = jwt.sign({ username: user.username, role: user.role }, accessTokenSecret);
+        // const accessToken = jwt.sign({ username: user.username, role: user.role }, accessTokenSecret);
+        
+        const accessToken = jwt.sign({ 
+            userId: user.userId, // Include userId in the token payload
+            username: user.username, 
+            role: user.role 
+        }, accessTokenSecret);
         // return res.status(200).json({ accessToken });
-        res.status(200).json({ accessToken, redirect: '/dashboard' });
+        // res.status(200).json({ accessToken, redirect: '/dashboard' });
+        
+        // Include userId in the response
+        res.status(200).json({ accessToken, redirect: '/dashboard', userId: user.userId }); 
+        
+
         }
     } catch (error) {
         console.error('Error logging in:', error);
@@ -123,7 +134,13 @@ const getUserByusername = async (username) => {
         const [rows, fields] = await db.execute('SELECT * FROM users WHERE username = ?', [username]);
         
         if (rows.length > 0) {
-            return rows[0]; // Return the first user found (assuming username is unique)
+            // return rows[0]; // Return the first user found
+            return {
+                userId: rows[0].id,
+                username: rows[0].username,
+                role: rows[0].role,
+                
+            };
         } else {
             return null; // User not found
         }
