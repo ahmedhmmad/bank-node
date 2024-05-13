@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import Dashboard from './Dashboard.jsx';
 import Header from '../components/Header.jsx';
 import styles from './login.module.css'; 
 
@@ -7,6 +8,7 @@ const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState(null);
+  const [userRole, setUserRole] = useState(null); 
 
   const handleLogin = async (e) => {
     e.preventDefault(); 
@@ -26,15 +28,20 @@ const Login = () => {
       });
 
       const userRole = roleResponse.data.role;
-      console.log(userRole);
+      setUserRole(userRole); // Set user role in state
 
       // Redirect to dashboard page with user role
-      window.location.href = `/dashboard?role=${userRole}`; 
+      // window.location.href = `/dashboard?role=${userRole}`; 
     } catch (error) {
       setMessage('Invalid Username or Password');
       console.error('Login error:', error);
     }
   };
+
+  // Render Dashboard if userRole is not null
+  if (userRole) {
+    return <Dashboard userRole={userRole} />;
+  }
 
   return (
     <div className={styles['login-container']}>
