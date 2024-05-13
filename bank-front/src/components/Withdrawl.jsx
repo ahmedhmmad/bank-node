@@ -1,23 +1,24 @@
 import React, { useState } from 'react';
 
-function Withdraw() {
+export default function Withdrawl() {
+    
     const [userInput,setUserInput]=useState({initialValue:0});
     function handleChange(inputIdentifier,newValue)
     {
         setUserInput((prevUserInput)=>{
             return{
                 ...prevUserInput,[inputIdentifier]:newValue
-
             }
-    });
-}
+        }
+        );
+    }
   return (
     <>
       <h3>User ID</h3>
-      <label htmlFor="withdrawalAmount">Amount</label>
-      <input type="number" id="withdrawalAmount" name="withdrawalAmount" required  />
+      <label htmlFor="amount">Amount</label>
+      <input type="number" id="amount" name="amount" required value={userInput.initialValue} onChange={(event)=>handleChange('intialValue',event.target.value)} />
     </>
   );
 }
 
-export default Withdraw;
+
