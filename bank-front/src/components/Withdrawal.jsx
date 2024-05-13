@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function Withdrawl() {
+export default function Withdrawal() {
     
     const [userInput,setUserInput]=useState({initialValue:0});
     function handleChange(inputIdentifier,newValue)

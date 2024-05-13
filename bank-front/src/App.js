@@ -5,8 +5,7 @@ import Register from './components/Register';
 import Dashboard from './components/Dashboard'; 
 import Transfer from './components/Transfer';
 import Deposit from './components/Deposit';
-import Withdrawl from './components/Withdrawl';
-
+import Withdrawal from './components/Withdrawal';
 
 const App = () => {
   const [redirectUrl, setRedirectUrl] = useState(null);
@@ -27,9 +26,6 @@ const App = () => {
             <li>
               <Link to="/">Login</Link>
             </li>
-            <li>
-              <Link to="/register">Register</Link>
-            </li>
           </ul>
         </nav>
 
@@ -39,8 +35,7 @@ const App = () => {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/transfer" element={<Transfer />} />
           <Route path="/deposit" element={<Deposit />} />
-          <Route path="/withdrawl" element={<Withdrawl />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/withdraw" element={<Withdrawal />} />
         </Routes>
       </div>
     </Router>
