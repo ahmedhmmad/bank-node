@@ -30,6 +30,7 @@ const getUserByUsername = async (username) => {
   try {
     const [rows, fields] = await db.execute('SELECT * FROM users WHERE username = ?', [username]);
     if (rows.length > 0) {
+      
       return rows[0]; 
     } else {
       return null; // User not found

@@ -11,8 +11,8 @@ const Dashboard = ({ userRole }) => {
             <li><Link to="/transfer">Transfer</Link></li>
             <li><Link to="/deposit">Deposit</Link></li>
             <li><Link to="/withdraw">Withdraw</Link></li>
-            <li><Link to="/register-clerk">Register Clerk</Link></li>
-            <li><Link to="/deregister-clerk">Deregister Clerk</Link></li>
+            <li><Link to="/register">Register Clerk</Link></li>
+            <li><Link to="/deregister">Deregister Clerk</Link></li>
           </ul>
         );
       case 'clerk':
