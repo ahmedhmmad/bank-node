@@ -26,6 +26,7 @@ const Login = () => {
       });
 
       const userRole = roleResponse.data.role;
+      console.log(userRole);
 
       // Redirect to dashboard page with user role
       window.location.href = `/dashboard?role=${userRole}`; 

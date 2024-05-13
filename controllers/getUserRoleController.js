@@ -2,10 +2,11 @@ const jwt = require('jsonwebtoken');
 const db = require('../utils/db');
 
 // Define the controller function
-const getUserRoleController = async (req, res) => {
+const getUserRole = async (req, res) => {
   try {
     // Extract the access token from the authorization header
     const token = req.headers.authorization.split(' ')[1]; 
+    console.log(token);
     // Verify the access token
     const decodedToken = jwt.verify(token, 'your_secret_value_here');
     // Extract the username from the token payload
@@ -40,4 +41,4 @@ const getUserByUsername = async (username) => {
 };
 
 
-module.exports = getUserRoleController;
+module.exports={getUserRole}
