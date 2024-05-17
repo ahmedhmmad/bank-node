@@ -5,11 +5,14 @@ export default function Deposit() {
     const [customerId, setCustomerId] = useState('');
     const [amount, setAmount] = useState(0);
     const [message, setMessage] = useState('');
+    const token = localStorage.getItem('accessToken');
     
 
     const handleDeposit = async () => {
         try {
-            const response = await axios.post('http://localhost:3000/api/v1/deposite', { customerId, amount });
+            const response = await axios.post('http://localhost:3000/api/v1/deposite', { amount },{
+                headers:{Authorization:`Bearer ${token}`}
+            });
             setMessage(response.data.message);
         } catch (error) {
             setMessage('Error depositing money');

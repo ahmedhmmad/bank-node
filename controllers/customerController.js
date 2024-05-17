@@ -89,6 +89,9 @@ const transferMoney = async (req, res) => {
         await updateAccountBalance(senderId, updatedSenderBalance);
         await updateAccountBalance(receiverId, updatedReceiverBalance);
 
+        //register Transaction
+        await registerTransaction(senderId,receiverId,amount,'transfer');
+
         // Send success response
         res.status(200).json({ message: "Transfer successful", transferFee });
     } catch (error) {

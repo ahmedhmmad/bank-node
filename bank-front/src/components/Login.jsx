@@ -21,19 +21,15 @@ const Login = () => {
       // Store the token in localStorage
       localStorage.setItem('accessToken', accessToken);
 
-      
-
-
-      // Fetch user role
+     // Fetch user role
       const roleResponse = await axios.get('http://127.0.0.1:3000/api/v1/user-role', {
         headers: {
           Authorization: `Bearer ${accessToken}`
         }
       });
-
-      const {userRole,userId} = roleResponse.data.role;
-      setUserRole(userRole); // Set user role in state
-     
+      //const {userRole} = roleResponse.data.role;
+      setUserRole(roleResponse.data.role); // Set user role in state
+      
 
       // Redirect to dashboard page with user role
       // window.location.href = `/dashboard?role=${userRole}`; 
