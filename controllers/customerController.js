@@ -41,9 +41,20 @@ const withdrawalMoney= async (req, res) => {
 }
 
 const transferMoney = async (req, res) => {
-    const { senderId, receiverId, amount } = req.body;
+    const { receiverId, amount } = req.body;
+    if(!req.headers.authorization)
+        {
+           return res.status(401).json({message:"Autherization header is missing"});
+        }
+        const token = req.headers.authorization.split(' ')[1]; 
+       
 
     try {
+         //retrive customer Id from token
+        
+         const decodedToken = jwt.verify(token, 'your_secret_value_here');
+         const senderId=decodedToken.userId;
+
         // Fetch sender and receiver account details from the database
         const [senderAccountRows] = await Customer.getCustomerAccountById(senderId);
         const [receiverAccountRows] = await Customer.getCustomerAccountById(receiverId);
