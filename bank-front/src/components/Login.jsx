@@ -9,6 +9,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState(null);
   const [userRole, setUserRole] = useState(null); 
+  
 
   const handleLogin = async (e) => {
     e.preventDefault(); 
@@ -19,7 +20,8 @@ const Login = () => {
 
       // Store the token in localStorage
       localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('userId', response.data.userId);
+
+      
 
 
       // Fetch user role
@@ -29,8 +31,9 @@ const Login = () => {
         }
       });
 
-      const userRole = roleResponse.data.role;
+      const {userRole,userId} = roleResponse.data.role;
       setUserRole(userRole); // Set user role in state
+     
 
       // Redirect to dashboard page with user role
       // window.location.href = `/dashboard?role=${userRole}`; 
