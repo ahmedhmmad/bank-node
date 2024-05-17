@@ -33,9 +33,9 @@ const login=async(req,res)=>{
         // const accessToken = jwt.sign({ username: user.username, role: user.role }, accessTokenSecret);
         
         const accessToken = jwt.sign({ 
-            userId: user.userId, // Include userId in the token payload
+            userId: user.userId, // Include userId
             username: user.username, 
-            role: user.role 
+            role: user.role //include role
         }, accessTokenSecret);
         // return res.status(200).json({ accessToken });
         // res.status(200).json({ accessToken, redirect: '/dashboard' });
@@ -131,22 +131,21 @@ const getInsertQueryForRole = (role) => {
 
 const getUserByusername = async (username) => {
     try {
-        const [rows, fields] = await db.execute('SELECT * FROM users WHERE username = ?', [username]);
+        const [rows] = await db.execute('SELECT * FROM users WHERE username = ?', [username]);
         
         if (rows.length > 0) {
-            // return rows[0]; // Return the first user found
             return {
                 userId: rows[0].id,
                 username: rows[0].username,
-                role: rows[0].role,
-                
+                password: rows[0].password,
+                role: rows[0].role
             };
         } else {
             return null; // User not found
         }
     } catch (error) {
         console.error('Error fetching user by username:', error);
-        throw error; // Propagate the error back to the caller
+        throw error;
     }
 };
 

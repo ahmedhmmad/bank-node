@@ -1,10 +1,21 @@
 const db = require('../utils/db');
 const Customer=require('../models/Customer');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const withdrawalMoney= async (req, res) => {
-    const { customerId, amount } = req.body;
-
+    const { amount } = req.body;
+    if(!req.headers.authorization)
+        {
+           return res.status(401).json({message:"Autherization header is missing"});
+        }
+        const token = req.headers.authorization.split(' ')[1]; 
     try {
+        //retrive customer Id from token
+        
+        const decodedToken = jwt.verify(token, 'your_secret_value_here');
+        const customerId=decodedToken.userId;
+        console.log(customerId);
         // Retrieve customer's current balance
      
         const currentBalance = await getCustomerBalance(customerId);
@@ -30,9 +41,20 @@ const withdrawalMoney= async (req, res) => {
 }
 
 const transferMoney = async (req, res) => {
-    const { senderId, receiverId, amount } = req.body;
+    const { receiverId, amount } = req.body;
+    if(!req.headers.authorization)
+        {
+           return res.status(401).json({message:"Autherization header is missing"});
+        }
+        const token = req.headers.authorization.split(' ')[1]; 
+       
 
     try {
+         //retrive customer Id from token
+        
+         const decodedToken = jwt.verify(token, 'your_secret_value_here');
+         const senderId=decodedToken.userId;
+
         // Fetch sender and receiver account details from the database
         const [senderAccountRows] = await Customer.getCustomerAccountById(senderId);
         const [receiverAccountRows] = await Customer.getCustomerAccountById(receiverId);
@@ -76,9 +98,17 @@ const transferMoney = async (req, res) => {
 };
 
 const depositeMoney=async(req,res)=>{
-    const {customerId,amount}=req.body;
-    console.log(`Amount of money is ${amount}`);
-    try{
+    const { amount } = req.body;
+    if(!req.headers.authorization)
+        {
+           return res.status(401).json({message:"Autherization header is missing"});
+        }
+        const token = req.headers.authorization.split(' ')[1]; 
+    try {
+        //retrive customer Id from token
+        
+        const decodedToken = jwt.verify(token, 'your_secret_value_here');
+        const customerId=decodedToken.userId;
         const currentBalance=await getCustomerBalance(customerId);
         
         const newBalance=currentBalance+amount;
@@ -101,17 +131,18 @@ const depositeMoney=async(req,res)=>{
 const registerTransaction=async(senderId,receiver_id,amount,transactionType)=>{
     console.log('Registering....')
     return db.execute('INSERT INTO transactions SET sender_id = ? , receiver_id =? , amount= ?,transaction_type = ?',[senderId,receiver_id,amount,transactionType]).then().catch((error)=>{console.log(error)});
+    //console.log('INSERT INTO transactions SET sender_id = ? , receiver_id =? , amount= ?,transaction_type = ?',[senderId,receiver_id,amount,transactionType])
 }
 
 
-// Function to update customer's balance in the database
+// Update customer's balance in the database
 const updateAccountBalance = async (customerId, newBalance) => {
     return db.execute('UPDATE customers SET balance = ? WHERE user_id = ?', [newBalance, customerId]).then().catch((error)=>{console.log(error)})
     
 };
 
 
-// Function to retrieve customer's current balance from the database
+// Retrieve customer's current balance from the database
 const getCustomerBalance = async (customerId) => {
    
     try{

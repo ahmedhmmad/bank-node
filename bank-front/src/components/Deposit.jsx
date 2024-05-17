@@ -5,6 +5,7 @@ export default function Deposit() {
     const [customerId, setCustomerId] = useState('');
     const [amount, setAmount] = useState(0);
     const [message, setMessage] = useState('');
+    
 
     const handleDeposit = async () => {
         try {
