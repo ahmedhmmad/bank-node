@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-export default function Transfer() {
+export default function Transfer({ userRole }) {
     const [receiverId, setReceiverId] = useState('');
     const [amount, setAmount] = useState(0);
     const [message, setMessage] = useState('');

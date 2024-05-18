@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-export default function Withdrawal() {
+export default function Withdrawal({ userRole }) {
     const [customerId, setCustomerId] = useState('');
     const [amount, setAmount] = useState(0);
     const [message, setMessage] = useState('');
