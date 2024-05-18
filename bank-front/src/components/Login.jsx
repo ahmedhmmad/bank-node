@@ -7,7 +7,8 @@ const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState(null);
-  const [userRole, setUserRole] = useState(null); 
+  const [userRole, setUserRole] = useState(null);
+  const[userId,setUserId] =useState(null);
   
 
   const handleLogin = async (e) => {
@@ -26,7 +27,10 @@ const Login = () => {
           Authorization: `Bearer ${accessToken}`
         }
       });
+      
       setUserRole(roleResponse.data.role); // Set user role in state
+      setUserId(roleResponse.data.userId); // Set user ID in state
+      
 
     } catch (error) {
       setMessage('Invalid Username or Password');
@@ -36,7 +40,7 @@ const Login = () => {
 
   // Render Dashboard if userRole is not null
   if (userRole) {
-    return <Dashboard userRole={userRole} />;
+    return <Dashboard userRole={userRole} userId={userId} />;
   }
 
   return (

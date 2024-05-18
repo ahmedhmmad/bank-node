@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-export default function Deposit({ userRole }) {
-  const [customerId, setCustomerId] = useState('');
+export default function Deposit({ userRole,userId }) {
+  //const [customerId, setCustomerId] = useState('');
   const [amount, setAmount] = useState(0);
   const [message, setMessage] = useState('');
   const token = localStorage.getItem('accessToken');
@@ -21,13 +21,12 @@ export default function Deposit({ userRole }) {
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
-      <h3 className="text-2xl font-bold mb-4">User ID</h3>
+    <h3 className="text-2xl font-bold mb-4">User ID</h3>
       <input 
         type="text" 
-        value={customerId} 
-        onChange={(e) => setCustomerId(e.target.value)} 
-        className="w-full px-3 py-2 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" 
-      />
+        value={userId} 
+        disabled  
+        className="w-full px-3 py-2 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 bg-gray-100"/>
       <label htmlFor="amount" className="block text-lg font-medium mb-2">Amount</label>
       <input 
         type="number" 
