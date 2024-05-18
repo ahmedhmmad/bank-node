@@ -4,7 +4,7 @@ import Deposit from './Deposit';
 import Withdrawal from './Withdrawal';
 import Transfer from './Transfer';
 
-const Dashboard = ({ userRole }) => {
+const Dashboard = ({ userRole,userId }) => {
   const [currentComponent, setCurrentComponent] = useState(null);
 
   const renderActions = () => {
@@ -43,11 +43,11 @@ const Dashboard = ({ userRole }) => {
   const renderComponent = () => {
     switch (currentComponent) {
       case 'deposit':
-        return <Deposit userRole={userRole} />;
+        return <Deposit userRole={userRole} userId={userId} />;
       case 'withdraw':
-        return <Withdrawal userRole={userRole} />;
+        return <Withdrawal userRole={userRole} userId={userId}/>;
       case 'transfer':
-        return <Transfer userRole={userRole} />;
+        return <Transfer userRole={userRole}/>;
       
       default:
         return null;
