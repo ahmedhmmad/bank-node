@@ -1,36 +1,54 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
 import Header from '../components/Header.jsx';
+import Deposit from './Deposit';
+import Withdrawal from './Withdrawal';
+import Transfer from './Transfer';
 
 const Dashboard = ({ userRole }) => {
+  const [currentComponent, setCurrentComponent] = useState(null);
+
   const renderActions = () => {
     switch (userRole) {
       case 'admin':
         return (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <ActionCard to="/transfer" label="Transfer" />
-            <ActionCard to="/deposit" label="Deposit" />
-            <ActionCard to="/withdraw" label="Withdraw" />
-            <ActionCard to="/register" label="Register Clerk" />
-            <ActionCard to="/deregister" label="Deregister Clerk" />
+            <ActionCard label="Transfer" onClick={() => setCurrentComponent('transfer')} />
+            <ActionCard label="Deposit" onClick={() => setCurrentComponent('deposit')} />
+            <ActionCard label="Withdraw" onClick={() => setCurrentComponent('withdraw')} />
+            <ActionCard label="Register Clerk" onClick={() => setCurrentComponent('register')} />
+            <ActionCard label="Deregister Clerk" onClick={() => setCurrentComponent('deregister')} />
           </div>
         );
       case 'clerk':
         return (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <ActionCard to="/transfer" label="Transfer" />
-            <ActionCard to="/deposit" label="Deposit" />
-            <ActionCard to="/withdraw" label="Withdraw" />
+            <ActionCard label="Transfer" onClick={() => setCurrentComponent('transfer')} />
+            <ActionCard label="Deposit" onClick={() => setCurrentComponent('deposit')} />
+            <ActionCard label="Withdraw" onClick={() => setCurrentComponent('withdraw')} />
           </div>
         );
       case 'customer':
         return (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <ActionCard to="/transfer" label="Transfer" />
-            <ActionCard to="/deposit" label="Deposit" />
-            <ActionCard to="/withdraw" label="Withdraw" />
+            <ActionCard label="Transfer" onClick={() => setCurrentComponent('transfer')} />
+            <ActionCard label="Deposit" onClick={() => setCurrentComponent('deposit')} />
+            <ActionCard label="Withdraw" onClick={() => setCurrentComponent('withdraw')} />
           </div>
         );
+      default:
+        return null;
+    }
+  };
+
+  const renderComponent = () => {
+    switch (currentComponent) {
+      case 'deposit':
+        return <Deposit userRole={userRole} />;
+      case 'withdraw':
+        return <Withdrawal userRole={userRole} />;
+      case 'transfer':
+        return <Transfer userRole={userRole} />;
+      
       default:
         return null;
     }
@@ -44,17 +62,21 @@ const Dashboard = ({ userRole }) => {
         <nav className="flex justify-center">
           {renderActions()}
         </nav>
+        <div className="mt-8">
+          {renderComponent()}
+        </div>
       </div>
     </div>
   );
 };
 
-const ActionCard = ({ to, label }) => (
-  <Link to={to} className="block p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-    <div className="text-center">
-      <h3 className="text-xl font-semibold">{label}</h3>
-    </div>
-  </Link>
+const ActionCard = ({ label, onClick }) => (
+  <button 
+    onClick={onClick} 
+    className="bg-sky-500 hover:bg-sky-700 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 w-full text-center"
+  >
+    <h3 className="text-xl font-semibold">{label}</h3>
+  </button>
 );
 
 export default Dashboard;
