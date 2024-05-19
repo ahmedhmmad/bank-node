@@ -15,7 +15,8 @@ const getUserRole = async (req, res) => {
     // Fetch the user's role from the database
     const user = await getUserByUsername(username);
     if (user) {
-      res.json({ role: user.role });
+      res.json({ role: user.role, userId: user.id });
+      
     } else {
       res.status(404).json({ message: 'User not found' });
     }
