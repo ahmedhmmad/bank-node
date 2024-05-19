@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 3000
 
 # Command to run the backend application.
-CMD ["node", "server.js"]
+CMD ["node", "app.js"]
