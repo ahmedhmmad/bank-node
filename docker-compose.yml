@@ -9,13 +9,14 @@ services:
       - NODE_ENV=development
     volumes:
       - .:/usr/src/app
+      - /usr/src/app/node_modules
     depends_on:
       - db
 
   frontend:
     build: ./bank-front
     ports:
-      - "5000:5000"
+      - '3001:80'
     environment:
       - NODE_ENV=development
     volumes:
