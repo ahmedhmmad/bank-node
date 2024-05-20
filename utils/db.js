@@ -2,9 +2,9 @@ const mysql = require('mysql2');
 
 // Create a pool to manage database connections
 const pool = mysql.createPool({
-    host: "localhost",
+    host: "db",
     user: "root",
-    password: "",
+    password: "example",
     database: "nodebank"
 });
 

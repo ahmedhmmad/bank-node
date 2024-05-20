@@ -1,5 +1,5 @@
 # Stage 1: Build the React app
-FROM node:16 as build
+FROM node:latest as build
 WORKDIR /usr/src/app
 COPY package.json package-lock.json ./
 RUN npm install

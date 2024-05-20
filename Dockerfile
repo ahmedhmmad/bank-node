@@ -1,5 +1,5 @@
 # Use the official Node.js image.
-FROM node:14
+FROM node:latest
 
 # Create and set the backend directory.
 WORKDIR /usr/src/app
