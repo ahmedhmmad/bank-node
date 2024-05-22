@@ -3,6 +3,7 @@ import Header from '../components/Header.jsx';
 import Deposit from './Deposit';
 import Withdrawal from './Withdrawal';
 import Transfer from './Transfer';
+import Register from './Register.jsx';
 
 const Dashboard = ({ userRole,userId }) => {
   const [currentComponent, setCurrentComponent] = useState(null);
@@ -48,6 +49,8 @@ const Dashboard = ({ userRole,userId }) => {
         return <Withdrawal userRole={userRole} userId={userId}/>;
       case 'transfer':
         return <Transfer userRole={userRole}/>;
+        case 'register':
+          return <Register/>;
       
       default:
         return null;
