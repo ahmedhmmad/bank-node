@@ -78,7 +78,7 @@ const ActionCard = ({ label, onClick }) => (
     onClick={onClick} 
     className="bg-sky-500 hover:bg-sky-700 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 w-full text-center"
   >
-    <h3 className="text-xl font-semibold">{label}</h3>
+    <h3 className="text-xl font-semibold p-5 text-white">{label}</h3>
   </button>
 );
 

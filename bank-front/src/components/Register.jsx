@@ -1,6 +1,5 @@
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import styles from './register.module.css'; 
 
 const Register = () => {
   const [username, setUsername] = useState('');
@@ -37,31 +36,52 @@ const Register = () => {
   };
 
   return (
-    <div className={styles.container}>
-      <h2>Register New User</h2>
-     
-      <form onSubmit={handleRegister}>
+    <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
+      <h3 className="text-2xl font-bold mb-4">Register A new User</h3>
+
+      <form onSubmit={handleRegister} className="space-y-4">
         <div>
-          <label>Username:</label>
-          <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
+          <label className="block text-gray-700">Username:</label>
+          <input 
+            type="text" 
+            value={username} 
+            onChange={(e) => setUsername(e.target.value)} 
+            required 
+            className="w-full mt-1 p-2 border border-gray-300 rounded-md"
+          />
         </div>
         <div>
-          <label>Password:</label>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <label className="block text-gray-700">Password:</label>
+          <input 
+            type="password" 
+            value={password} 
+            onChange={(e) => setPassword(e.target.value)} 
+            required 
+            className="w-full mt-1 p-2 border border-gray-300 rounded-md"
+          />
         </div>
         <div>
-          <label>Role:</label>
-          <select value={role} onChange={(e) => setRole(e.target.value)} required>
+          <label className="block text-gray-700">Role:</label>
+          <select 
+            value={role} 
+            onChange={(e) => setRole(e.target.value)} 
+            required 
+            className="w-full mt-1 p-2 border border-gray-300 rounded-md"
+          >
             <option value="">Select Role</option>
             <option value="admin">Admin</option>
             <option value="clerk">Clerk</option>
             <option value="customer">Customer</option>
           </select>
         </div>
-        <button type="submit">Register</button>
+        <button 
+          type="submit" 
+          className="w-full mt-4 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300"
+        >
+          Register
+        </button>
       </form>
-      {message && <p style={{ color: 'red' }}>{message}</p>}
-
+      {message && <p className="mt-4 text-red-500">{message}</p>}
     </div>
   );
 };
