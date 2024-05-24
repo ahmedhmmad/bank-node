@@ -1,10 +1,13 @@
 const mysql = require('mysql2');
+const database=require('../config')
+
+console.log(database);
 
 // Create a pool to manage database connections
 const pool = mysql.createPool({
-    host: "db",
+    host: database.host,
     user: "root",
-    password: "example",
+    password: "",
     database: "nodebank"
 });
 

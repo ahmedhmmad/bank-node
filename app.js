@@ -5,6 +5,7 @@ const userRoleRouter=require('./routes/user-role')
 const depositeRouter=require('./routes/deposit');
 const withdrawalRouter=require('./routes/withdrawal');
 const transferRouter=require('./routes/transfer');
+const balanceRouter=require('./routes/balance');
 const cors = require('cors');
 
 
@@ -20,6 +21,7 @@ app.use('/api/v1/deposite',depositeRouter);
 app.use('/api/v1/withdrawal',withdrawalRouter);
 app.use('/api/v1/transfer',transferRouter);
 app.use('/api/v1/user-role',userRoleRouter);
+app.use('/api/v1/balance', balanceRouter);
 
 
 // Start the server
