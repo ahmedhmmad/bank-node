@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-export default function Deposit({ userRole, userId }) {
-    const [amount, setAmount] = useState(0);
+export default function Deposit({ userId }) {
+    const [amount, setAmount] = useState();
     const [message, setMessage] = useState('');
     const [currentBalance, setCurrentBalance] = useState(0);
     const token = localStorage.getItem('accessToken');
-
 
     const fetchCurrentBalance = async () => {
         try {
@@ -21,21 +20,24 @@ export default function Deposit({ userRole, userId }) {
     };
 
     const handleDeposit = async () => {
+        
         try {
             const response = await axios.post('http://localhost:3000/api/v1/deposit', { amount }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
+            
             setMessage(response.data.message);
-            fetchCurrentBalance(); // Update balance after deposit
+            await fetchCurrentBalance();
+           
         } catch (error) {
-            setMessage('Error depositing money');
+            setMessage(`Error depositing money ${amount}`);
             console.error('Deposit error:', error);
         }
     };
 
     useEffect(() => {
         fetchCurrentBalance();
-    });
+    }, []);
 
     return (
         <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
@@ -56,7 +58,7 @@ export default function Deposit({ userRole, userId }) {
                 name="amount" 
                 required 
                 value={amount} 
-                onChange={(e) => setAmount(parseFloat(e.target.value))} 
+                onChange={(e) => setAmount(parseFloat(e.target.value))}
                 className="w-full px-3 py-2 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" 
             />
             <button 
@@ -69,3 +71,4 @@ export default function Deposit({ userRole, userId }) {
         </div>
     );
 }
+
