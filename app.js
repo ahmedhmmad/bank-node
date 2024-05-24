@@ -17,7 +17,7 @@ app.use(express.json());
 
 app.use('/api/v1/login',loginRouter);
 app.use('/api/v1/register',registerRouter);
-app.use('/api/v1/deposite',depositeRouter);
+app.use('/api/v1/deposit',depositeRouter);
 app.use('/api/v1/withdrawal',withdrawalRouter);
 app.use('/api/v1/transfer',transferRouter);
 app.use('/api/v1/user-role',userRoleRouter);

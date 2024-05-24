@@ -2,6 +2,7 @@ const db = require('../utils/db');
 const Customer=require('../models/Customer');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { jwtSecret } = require('../config');
 
 const withdrawalMoney= async (req, res) => {
     const { amount } = req.body;
@@ -13,7 +14,7 @@ const withdrawalMoney= async (req, res) => {
     try {
         //retrive customer Id from token
         
-        const decodedToken = jwt.verify(token, 'your_secret_value_here');
+        const decodedToken = jwt.verify(token, jwtSecret);
         const customerId=decodedToken.userId;
         console.log(customerId);
         // Retrieve customer's current balance
@@ -52,7 +53,7 @@ const transferMoney = async (req, res) => {
     try {
          //retrive customer Id from token
         
-         const decodedToken = jwt.verify(token, 'your_secret_value_here');
+         const decodedToken = jwt.verify(token, jwtSecret);
          const senderId=decodedToken.userId;
 
         // Fetch sender and receiver account details from the database
@@ -102,6 +103,7 @@ const transferMoney = async (req, res) => {
 
 const depositeMoney=async(req,res)=>{
     const { amount } = req.body;
+    
     if(!req.headers.authorization)
         {
            return res.status(401).json({message:"Autherization header is missing"});
@@ -110,7 +112,7 @@ const depositeMoney=async(req,res)=>{
     try {
         //retrive customer Id from token
         
-        const decodedToken = jwt.verify(token, 'your_secret_value_here');
+        const decodedToken = jwt.verify(token, jwtSecret);
         const customerId=decodedToken.userId;
         const currentBalance=await getCustomerBalance(customerId);
         
