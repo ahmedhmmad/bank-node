@@ -8,6 +8,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState(null);
   const [userRole, setUserRole] = useState(null);
+  const [balance,setBalance]=useState(0);
   const[userId,setUserId] =useState(null);
   
 
@@ -27,9 +28,20 @@ const Login = () => {
           Authorization: `Bearer ${accessToken}`
         }
       });
+
+      //Fetch User Balance
+      const balanceResponse = await axios.get('http://localhost:3000/api/v1/balance', {
+                headers: { Authorization: `Bearer ${accessToken}` }
+            });
+            setBalance(balanceResponse.data.balance);
+
+      
+
+      
       
       setUserRole(roleResponse.data.role); // Set user role in state
       setUserId(roleResponse.data.userId); // Set user ID in state
+      
       
 
     } catch (error) {
@@ -40,7 +52,7 @@ const Login = () => {
 
   // Render Dashboard if userRole is not null
   if (userRole) {
-    return <Dashboard userRole={userRole} userId={userId} />;
+    return <Dashboard userRole={userRole} userId={userId} username={username} balance={balance} />;
   }
 
   return (

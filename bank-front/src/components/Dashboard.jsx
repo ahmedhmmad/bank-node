@@ -4,8 +4,9 @@ import Deposit from './Deposit';
 import Withdrawal from './Withdrawal';
 import Transfer from './Transfer';
 import Register from './Register.jsx';
+import UserDetails from './UserDetails.jsx';
 
-const Dashboard = ({ userRole,userId }) => {
+const Dashboard = ({ userRole,userId,username,balance }) => {
   const [currentComponent, setCurrentComponent] = useState(null);
 
   const renderActions = () => {
@@ -58,10 +59,16 @@ const Dashboard = ({ userRole,userId }) => {
   };
 
   return (
+    
+
     <div className="min-h-screen bg-gray-100">
       <Header />
+      
+      
       <div className="container mx-auto py-8">
         <h2 className="text-3xl font-bold mb-8 text-center">Welcome to the Dashboard!</h2>
+        
+        <UserDetails username={username} balance={balance}/>
         <nav className="flex justify-center">
           {renderActions()}
         </nav>

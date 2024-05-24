@@ -1,6 +1,7 @@
 const db = require('../utils/db');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { jwtSecret } = require('../config');
 
 const login=async(req,res)=>{
     console.log('Connecting....')
@@ -18,25 +19,21 @@ const login=async(req,res)=>{
         const MatchedPassword = await bcrypt.compare(password, user.password);
         
         if (!user || !MatchedPassword) {
-            
-            console.log(`${password}   ====   ${user.password}`)
-            
+                
             return res.status(401).json({ message: "Invalid Username or Password" });
         }
         if(user && MatchedPassword)
         {
 
-        console.log('User logged in:', user.username);
-        const accessTokenSecret = 'your_secret_value_here';
-
-
+    
         // const accessToken = jwt.sign({ username: user.username, role: user.role }, accessTokenSecret);
         
         const accessToken = jwt.sign({ 
             userId: user.userId, // Include userId
             username: user.username, 
             role: user.role //include role
-        }, accessTokenSecret);
+            
+        }, jwtSecret);
         // return res.status(200).json({ accessToken });
         // res.status(200).json({ accessToken, redirect: '/dashboard' });
         
@@ -63,7 +60,7 @@ const register= async (req, res) => {
         //Get the User role from token
         const token = req.headers.authorization.split(' ')[1]; 
         try{
-            const decodedToken = jwt.verify(token, 'your_secret_value_here');
+            const decodedToken = jwt.verify(token, jwtSecret);
             const userRole = decodedToken.role;
 
             //check if user is Admin
