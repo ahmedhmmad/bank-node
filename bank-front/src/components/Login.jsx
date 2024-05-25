@@ -17,14 +17,14 @@ const Login = () => {
     e.preventDefault(); 
 
     try {
-      const response = await axios.post('http://127.0.0.1:3000/api/v1/login', { username, password });
+      const response = await axios.post('http://localhost:3000/api/v1/login', { username, password });
       const accessToken = response.data.accessToken;
 
       // Store the token in localStorage
       localStorage.setItem('accessToken', accessToken);
 
      // Fetch user role
-      const roleResponse = await axios.get('http://127.0.0.1:3000/api/v1/user-role', {
+      const roleResponse = await axios.get('http://localhost:3000/api/v1/user-role', {
         headers: {
           Authorization: `Bearer ${accessToken}`
         }

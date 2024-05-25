@@ -7,7 +7,7 @@ console.log(database);
 const pool = mysql.createPool({
     host: database.host,
     user: "root",
-    password: "",
+    password: "example",
     database: "nodebank"
 });
 

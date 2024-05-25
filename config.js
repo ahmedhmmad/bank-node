@@ -8,7 +8,7 @@ module.exports = {
         //docker
         host: "db",
         user: "root",
-        password: "",
+        password: "example",
         database: "nodebank"
     }
   };
