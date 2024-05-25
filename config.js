@@ -3,10 +3,10 @@ module.exports = {
     jwtSecret: 'your_secret_value_here',
     db: {
         //localhost
-        //host: "localhost",
+        host: "localhost",
 
         //docker
-        host: "db",
+        // host: "db",
         user: "root",
         password: "example",
         database: "nodebank"
