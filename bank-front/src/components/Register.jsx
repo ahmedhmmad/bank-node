@@ -22,7 +22,7 @@ const Register = () => {
       const headers = accessToken ? { Authorization: `Bearer ${accessToken}` } : {};
 
       const response = await axios.post(
-        'http://127.0.0.1:3000/api/v1/register',
+        'http://localhost:3000/api/v1/register',
         { username, password, role },
         { headers }
       );
