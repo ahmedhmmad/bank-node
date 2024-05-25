@@ -53,10 +53,9 @@ const register= async (req, res) => {
 
     try {
         //check autherization header content
-        if(!req.headers.authorization)
+        if(req.headers.authorization)
         {
-           return res.status(401).json({message:"Autherization header is missing"});
-        }
+           
         //Get the User role from token
         const token = req.headers.authorization.split(' ')[1]; 
         try{
@@ -68,10 +67,25 @@ const register= async (req, res) => {
             {
                 return res.status(403).json({message:"Only admins can register"})
             }
-            
+             // Proceed with registration if the user is admin
+             const hashedPassword = await bcrypt.hash(password, 10);
+             const connection = await db.getConnection();
+             await saveUser(username, hashedPassword, role);
+             connection.release();
+
+             res.status(201).json({ message: "User registered successfully" });
+
+                         
         }catch(err)
         {
             return res.status(401).json({message:"Invalid JWT token"});
+        }
+        }
+        else{
+            if (role!== 'customer')
+                {
+                    return res.status(403).json({ message: "Only customers can be registered without authorization" });
+                }
         }
         
 

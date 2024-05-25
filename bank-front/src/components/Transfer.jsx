@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-export default function Transfer({ userRole }) {
-    const [receiverId, setReceiverId] = useState('');
+export default function Transfer() {
+    const [receiverId, setReceiverId] = useState();
     const [amount, setAmount] = useState(0);
     const [message, setMessage] = useState('');
     const token = localStorage.getItem('accessToken');

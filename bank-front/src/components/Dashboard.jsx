@@ -17,8 +17,8 @@ const Dashboard = ({ userRole,userId,username,balance }) => {
             <ActionCard label="Transfer" onClick={() => setCurrentComponent('transfer')} />
             <ActionCard label="Deposit" onClick={() => setCurrentComponent('deposit')} />
             <ActionCard label="Withdraw" onClick={() => setCurrentComponent('withdraw')} />
-            <ActionCard label="Register Clerk" onClick={() => setCurrentComponent('register')} />
-            <ActionCard label="Deregister Clerk" onClick={() => setCurrentComponent('deregister')} />
+            <ActionCard label="Register" onClick={() => setCurrentComponent('register')} />
+            <ActionCard label="Deregister" onClick={() => setCurrentComponent('deregister')} />
           </div>
         );
       case 'clerk':

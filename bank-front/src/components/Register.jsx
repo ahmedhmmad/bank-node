@@ -4,7 +4,7 @@ import axios from 'axios';
 const Register = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('');
+  const [role, setRole] = useState('customer'); 
   const [message, setMessage] = useState(null);
 
   const accessToken = localStorage.getItem('accessToken');
@@ -13,22 +13,25 @@ const Register = () => {
     e.preventDefault();
 
     try {
-      if (!accessToken) {
-        setMessage('Access token not found. Please log in.');
+      
+      if ((role === 'clerk' || role === 'admin') && !accessToken) {
+        setMessage('You must be logged in as an admin to register clerks or admins.');
         return;
       }
 
+      const headers = accessToken ? { Authorization: `Bearer ${accessToken}` } : {};
+
       const response = await axios.post(
-        'http://127.0.0.1:3000/api/v1/register',
+        'http://localhost:3000/api/v1/register',
         { username, password, role },
-        { headers: { Authorization: `Bearer ${accessToken}` } }
+        { headers }
       );
 
       console.log('User registered successfully:', response.data.message);
       setMessage('User registered successfully');
       setUsername('');
       setPassword('');
-      setRole('');
+      setRole('customer'); // Reset role to 'customer'
     } catch (error) {
       setMessage('Failed to register user. Please try again.');
       console.error('Registration error:', error);
@@ -37,7 +40,7 @@ const Register = () => {
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
-      <h3 className="text-2xl font-bold mb-4">Register A new User</h3>
+      <h3 className="text-2xl font-bold mb-4">Register A New User</h3>
 
       <form onSubmit={handleRegister} className="space-y-4">
         <div>
@@ -68,10 +71,9 @@ const Register = () => {
             required 
             className="w-full mt-1 p-2 border border-gray-300 rounded-md"
           >
-            <option value="">Select Role</option>
-            <option value="admin">Admin</option>
-            <option value="clerk">Clerk</option>
             <option value="customer">Customer</option>
+            <option value="clerk">Clerk</option>
+            <option value="admin">Admin</option>
           </select>
         </div>
         <button 

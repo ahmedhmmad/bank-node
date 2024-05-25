@@ -9,7 +9,7 @@ services:
       - NODE_ENV=development
       - DB_HOST=db
       - DB_USER=root
-      - DB_PASSWORD=example
+      - DB_PASSWORD
       - DB_NAME=nodebank
     volumes:
       - .:/usr/src/app
@@ -29,7 +29,7 @@ services:
   db:
     image: mariadb:latest
     environment:
-      MYSQL_ROOT_PASSWORD: example
+      MYSQL_ROOT_PASSWORD:
       MYSQL_DATABASE: nodebank
     ports:
       - "3306:3306"
@@ -41,7 +41,7 @@ services:
     image: phpmyadmin/phpmyadmin
     environment:
       PMA_HOST: db
-      MYSQL_ROOT_PASSWORD: example
+      MYSQL_ROOT_PASSWORD:
     ports:
       - "8080:80"
     depends_on:
