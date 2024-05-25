@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Dashboard from './Dashboard.jsx';
 import Header from '../components/Header.jsx';
@@ -87,9 +88,11 @@ const Login = () => {
           </button>
         </form>
         {message && <p className="mt-4 text-red-600 text-center">{message}</p>}
+        <div className="mt-6 text-center">
+          <p className="text-gray-600">Don't have an account? <Link to="/register" className="text-blue-500 hover:underline">Register here</Link></p>
+        </div>
       </div>
     </div>
   );
 };
-
 export default Login;
