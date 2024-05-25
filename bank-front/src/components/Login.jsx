@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Dashboard from './Dashboard.jsx';
@@ -11,6 +11,42 @@ const Login = () => {
   const [userRole, setUserRole] = useState(null);
   const [balance,setBalance]=useState(0);
   const[userId,setUserId] =useState(null);
+  const [loading,setLoading]=useState(true);
+
+  useEffect(() => {
+    const checkUserSession = async () => {
+      const accessToken = localStorage.getItem('accessToken');
+      if (accessToken) {
+        try {
+          // Fetch user role
+          const roleResponse = await axios.get('http://localhost:3000/api/v1/user-role', {
+            headers: {
+              Authorization: `Bearer ${accessToken}`
+            }
+          });
+
+          // Fetch user balance
+          const balanceResponse = await axios.get('http://localhost:3000/api/v1/balance', {
+            headers: {
+              Authorization: `Bearer ${accessToken}`
+            }
+          });
+
+          setBalance(balanceResponse.data.balance);
+          setUserRole(roleResponse.data.role); 
+          setUserId(roleResponse.data.userId); 
+          setUsername(roleResponse.data.username);  
+        } catch (error) {
+          console.error('Error fetching user session:', error);
+        }
+      }
+      setLoading(false);
+    };
+
+    checkUserSession();
+  }, []);
+  
+
   
 
   const handleLogin = async (e) => {
@@ -54,6 +90,10 @@ const Login = () => {
   // Render Dashboard if userRole is not null
   if (userRole) {
     return <Dashboard userRole={userRole} userId={userId} username={username} balance={balance} />;
+  }
+  //Blank while refreshing
+  if (loading) {
+    return <div className="min-h-screen bg-gray-100 flex justify-center items-center">Loading...</div>;
   }
 
   return (
