@@ -57,12 +57,9 @@ const transferMoney = async (req, res) => {
          const senderId=decodedToken.userId;
 
         // Fetch sender and receiver account details from the database
-        const [senderAccountRows] = await Customer.getCustomerAccountById(senderId);
-        const [receiverAccountRows] = await Customer.getCustomerAccountById(receiverId);
+        const senderAccount = await Customer.getCustomerAccountById(senderId);
+        const receiverAccount = await Customer.getCustomerAccountById(receiverId);
 
-        // Extract sender and receiver accounts from the rows
-        const senderAccount = senderAccountRows[0];
-        const receiverAccount = receiverAccountRows[0];
 
         // Check if sender account exists
         if (!senderAccount) {

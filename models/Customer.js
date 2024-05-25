@@ -9,7 +9,11 @@ class Customer {
 
     static async getCustomerAccountById(id) {
         const [rows] = await db.execute(`SELECT * FROM customers WHERE user_id = ?`, [id]);
-        return rows;
+        if (rows.length === 0) {
+            throw new Error(`No customer found with user_id: ${id}`);
+        }
+        console.log(rows[0]);
+        return rows[0];
     }
 
     static async getCustomerBalance(id) {

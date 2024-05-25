@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-export default function Transfer({ userRole }) {
-    const [receiverId, setReceiverId] = useState('');
+export default function Transfer() {
+    const [receiverId, setReceiverId] = useState();
     const [amount, setAmount] = useState(0);
     const [message, setMessage] = useState('');
     const token = localStorage.getItem('accessToken');
 
     const handleTransfer = async () => {
         try {
-            const response = await axios.post('http://localhost:3000/api/v1/transfer', { receiverId, amount }, {
+            const response = await axios.post('http://127.0.0.1:3000/api/v1/transfer', { receiverId, amount }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setMessage(response.data.message);
