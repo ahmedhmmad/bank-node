@@ -2,9 +2,9 @@ import React, { useState,useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Dashboard from './Dashboard.jsx';
-import Header from '../components/Header.jsx';
+import Header from './Header.jsx';
 
-const Login = () => {
+const Adminlogin = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState(null);
@@ -12,6 +12,8 @@ const Login = () => {
   const [balance,setBalance]=useState(0);
   const[userId,setUserId] =useState(null);
   const [loading,setLoading]=useState(true);
+  const [isAdmin,setIsAdmin]=useState(false);
+  
 
   useEffect(() => {
     const checkUserSession = async () => {
@@ -35,7 +37,21 @@ const Login = () => {
           setBalance(balanceResponse.data.balance);
           setUserRole(roleResponse.data.role); 
           setUserId(roleResponse.data.userId); 
-          setUsername(roleResponse.data.username);  
+          setUsername(roleResponse.data.username);
+          
+          if (roleResponse.data.role==='admin')
+            {
+                setIsAdmin(true)
+            }
+            else
+            {
+                setIsAdmin(false);
+                setMessage(
+                    <span>
+                      If you are not an admin, use the normal page to login. Go to the <Link to="/">Home Page</Link>.
+                    </span>
+                  );
+            }
         } catch (error) {
           console.error('Error fetching user session:', error);
         }
@@ -79,6 +95,16 @@ const Login = () => {
       setUserRole(roleResponse.data.role); // Set user role in state
       setUserId(roleResponse.data.userId); // Set user ID in state
       
+      if (roleResponse.data.role === 'admin') {
+        setIsAdmin(true);
+      } else {
+        setIsAdmin(false);
+        setMessage(
+          <span>
+            If you are not an admin, use the normal page to login. Go to the <Link to="/">Home Page</Link>.
+          </span>
+        );
+      }
       
 
     } catch (error) {
@@ -87,14 +113,17 @@ const Login = () => {
     }
   };
 
-  // Render Dashboard if userRole is not null
-  if (userRole==='clerk'||userRole==='customer') {
-    return <Dashboard userRole={userRole} userId={userId} username={username} balance={balance} />;
-  }
+  
   //Blank while refreshing
   if (loading) {
     return <div className="min-h-screen bg-gray-100 flex justify-center items-center">Loading...</div>;
   }
+
+  if (isAdmin)
+    {
+        return <Dashboard userRole={userRole} userId={userId} username={username} balance={balance} />;
+    }
+    
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center">
@@ -135,4 +164,4 @@ const Login = () => {
     </div>
   );
 };
-export default Login;
+export default Adminlogin;
