@@ -6,6 +6,7 @@ import Dashboard from './components/Dashboard';
 import Transfer from './components/Transfer';
 import Deposit from './components/Deposit';
 import Withdrawal from './components/Withdrawal';
+import Adminlogin from './components/Adminlogin';
 
 const App = () => {
   const [redirectUrl, setRedirectUrl] = useState(null);
@@ -31,6 +32,7 @@ const App = () => {
 
         <Routes>
           <Route path="/" element={<Login setRedirectUrl={setRedirectUrl} />} />
+          <Route path="/admin/login" element={<Adminlogin />} />
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/transfer" element={<Transfer />} />
