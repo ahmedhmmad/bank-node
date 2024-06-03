@@ -4,8 +4,11 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { jwtSecret } = require('../config');
 const { get } = require('../app');
+const db = require('../utils/db');
+
 
 jest.mock('../utils/db');
+db.execute.mockResolvedValue([[]]);
 jest.mock('bcrypt');
 jest.mock('jsonwebtoken');
 jest.mock('../controllers/authController', () => ({
@@ -56,7 +59,7 @@ describe('login', () => {
         expect(res.json).toHaveBeenCalledWith({ accessToken, redirect: '/dashboard/admin', userId: user.userId });
 
 
-    })
+    });
 
     
 });
