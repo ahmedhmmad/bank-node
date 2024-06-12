@@ -113,7 +113,7 @@ const getUserByusername = async (username) => {
                 role: rows[0].role
             };
         } else {
-            return null;
+            throw 401;
         }
     } catch (error) {
         console.error('Error fetching user by username:', error);

@@ -1,55 +1,57 @@
-// const request = require('supertest');
-// const bcrypt = require('bcrypt');
-// const app = require('../app');
+const db = require("../utils/db");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const { jwtSecret } = require("../config");
+const { register } = require("../controllers/authController");
 
-// jest.mock('bcrypt');
+describe("Register", () => {
+  it("should return 400 if username, password or role is missing", async () => {
+    const req = {
+      body: {},
+      headers: {},
+    };
+    const res = {
+      status: jest.fn(() => res),
+      json: jest.fn(),
+    };
+    await register(req, res);
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+      message: "Username, password and role are required",
+    });
+  });
 
-// describe('POST /api/v1/register', () => {
-//   beforeEach(() => {
-//     jest.clearAllMocks();
-//   });
+  it("should return 201 if user is saved successfully", async () => {
+    const authorization = "Bearer faketoken";
+    const req = {
+      headers: {
+        authorization,
+      },
+      body: {
+        username: "test",
+        password: "test",
+        role: "customer",
+      },
+    };
+    const res = {
+      status: jest.fn(() => res),
+      json: jest.fn(),
+    };
 
-//   it('should register a user successfully', async () => {
-//     // Mocking bcrypt.hash to return a hashed password
-//     bcrypt.hash.mockResolvedValue('hashedPassword');
+    jwt.verify = jest.fn(() => ({ role: "admin" }));
 
-//     const userData = {
-//       username: 'testuser',
-//       password: 'testpassword',
-//       role: 'customer',
-//     };
+    const mockConnection = {
+      release: jest.fn(),
+    };
 
-//     // Sending a POST request to the register endpoint
-//     const response = await request(app)
-//       .post('/api/v1/register')
-//       .send(userData);
+    db.getConnection = jest.fn().mockResolvedValue(mockConnection);
+    const saveUser = jest.fn().mockResolvedValue();
 
-//     // Expect 201, and success message
-//     expect(response.status).toBe(201);
-//     expect(response.body).toEqual({ message: 'User registered successfully' });
-
- 
-//   });
-
-//   it('should return 500 on server error', async () => {
-//     // Mocking bcrypt.hash to throw an error
-//     bcrypt.hash.mockRejectedValue(new Error('bcrypt hashing error'));
-
-//     const userData = {
-//       username: 'testuser',
-//       password: 'testpassword',
-//       role: 'customer',
-//     };
-
-//     // Sending a POST request to the register endpoint
-//     const response = await request(app)
-//       .post('/api/v1/register')
-//       .send(userData);
-
-//     // Expecting a 500 response with an error message
-//     expect(response.status).toBe(500);
-//     expect(response.body).toEqual({ message: 'Internal Server Error' });
-// });
-
-
-// });
+    await register(req, res);
+    expect(res.status).toHaveBeenCalledWith(201);
+    expect(res.json).toHaveBeenCalledWith({
+      message: "User registered successfully",
+    });
+    expect(mockConnection.release).toHaveBeenCalled();
+  });
+});
