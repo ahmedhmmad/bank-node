@@ -1,72 +1,114 @@
-// const request = require('supertest');
-// const app = require('../app'); 
+const db = require('../utils/db');
+const Customer = require('../models/Customer');
+const jwt = require('jsonwebtoken');
+const { jwtSecret } = require('../config');
+const { transferMoney } = require('../controllers/customerController');
 
-// describe('POST /api/v1/transfer', () => {
-//   it('should transfer money successfully', async () => {
-//     const transferData = {
-//       senderId: 123, 
-//       receiverId: 456, 
-//       amount: 100, 
-//     };
+jest.mock('jsonwebtoken');
+jest.mock('../utils/db');
+jest.mock('../models/Customer', () => ({
+    getCustomerAccountById: jest.fn(),
+}));
+jest.mock('../controllers/customerController', () => ({
+    ...jest.requireActual('../controllers/customerController'),
+    updateAccountBalance: jest.fn(),
+    registerTransaction: jest.fn(),
+}));
 
-//     const response = await request(app)
-//       .post('/api/v1/transfer')
-//       .send(transferData);
+describe('transferMoney', () => {
+    let req, res;
 
-//     // Expecting a 200 response with a success message and transfer fee
-//     expect(response.status).toBe(200);
-//     expect(response.body.message).toBe('Transfer successful');
-//     expect(response.body.transferFee).toBeDefined();
-//   });
+    beforeEach(() => {
+        req = {
+            body: {
+                receiverId: 2,
+                amount: 100,
+            },
+            headers: {
+                authorization: 'Bearer validToken',
+            }
+        };
 
-//   it('should return 404 if sender or receiver account not found', async () => {
-//     const invalidTransferData = {
-//       senderId: 9999, // Invalid sender ID
-//       receiverId: 8888, // Invalid receiver ID
-//       amount: 100,
-//     };
+        res = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn(),
+        };
 
-//     const response = await request(app)
-//       .post('/api/v1/transfer')
-//       .send(invalidTransferData);
+        jwt.verify.mockReturnValue({ userId: 1 });
+    });
 
-//     // Expecting a 404 response for sender or receiver account not found
-//     expect(response.status).toBe(404);
-//     expect(response.body.message).toBe('Sender or receiver account not found');
-//   });
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
 
-//   it('should return 400 if sender has insufficient balance', async () => {
-//     // Set up sender with insufficient balance
-//     // Replace senderId with a valid sender ID and balance less than transfer amount
-//     const senderId = 123;
-//     const senderAccount = await getAccountById(senderId);
-//     const transferData = {
-//       senderId,
-//       receiverId: 456,
-//       amount: senderAccount.balance + 1, // Amount greater than sender's balance
-//     };
+    it('should return 401 if authorization header is missing', async () => {
+        req.headers.authorization = undefined;
 
-//     const response = await request(app)
-//       .post('/api/v1/transfer')
-//       .send(transferData);
+        await transferMoney(req, res);
 
-//     // Expecting a 400 response for insufficient balance
-//     expect(response.status).toBe(400);
-//     expect(response.body.message).toBe('Insufficient balance for transfer👌');
-//   });
+        expect(res.status).toHaveBeenCalledWith(401);
+        expect(res.json).toHaveBeenCalledWith({ message: 'Autherization header is missing' });
+    });
 
-//   it('should return 500 for server error', async () => {
-//     // Mocking a server error by sending invalid data
-//     const invalidData = {
-//       invalidKey: 'invalidValue',
-//     };
+    it('should return 500 if sender account is not found', async () => {
+        Customer.getCustomerAccountById.mockResolvedValueOnce(null);
 
-//     const response = await request(app)
-//       .post('/api/v1/transfer')
-//       .send(invalidData);
+        await transferMoney(req, res);
 
-//     // Expecting a 500 response for server error
-//     expect(response.status).toBe(500);
-//     expect(response.body.message).toBe('Internal Server Error');
-//   });
-// });
+        expect(Customer.getCustomerAccountById).toHaveBeenCalledWith(1);
+        expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.json).toHaveBeenCalledWith({ message: 'Internal Server Error' });
+    });
+
+    it('should return 500 if receiver account is not found', async () => {
+        const senderAccount = { userId: 1, balance: 1000 };
+        Customer.getCustomerAccountById.mockResolvedValueOnce(senderAccount).mockResolvedValueOnce(null);
+
+        await transferMoney(req, res);
+
+        expect(Customer.getCustomerAccountById).toHaveBeenCalledWith(1);
+        expect(Customer.getCustomerAccountById).toHaveBeenCalledWith(2);
+        expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.json).toHaveBeenCalledWith({ message: 'Internal Server Error' });
+    });
+
+    it('should return 500 if insufficient balance for transfer', async () => {
+        const senderAccount = { userId: 1, balance: 100 };
+        const receiverAccount = { userId: 2, balance: 500 };
+
+        Customer.getCustomerAccountById
+            .mockResolvedValueOnce(senderAccount)
+            .mockResolvedValueOnce(receiverAccount);
+
+        await transferMoney(req, res);
+
+        expect(Customer.getCustomerAccountById).toHaveBeenCalledWith(1);
+        expect(Customer.getCustomerAccountById).toHaveBeenCalledWith(2);
+
+    
+        expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.json).toHaveBeenCalledWith({ message: 'Internal Server Error' });
+    });
+
+    it('should transfer money successfully', async () => {
+        const senderAccount = { userId: 1, balance: 1000 };
+        const receiverAccount = { userId: 2, balance: 500 };
+
+        Customer.getCustomerAccountById
+            .mockResolvedValueOnce(senderAccount)
+            .mockResolvedValueOnce(receiverAccount);
+
+        await transferMoney(req, res);
+
+        expect(Customer.getCustomerAccountById).toHaveBeenCalledWith(1);
+        expect(Customer.getCustomerAccountById).toHaveBeenCalledWith(2);
+
+        expect(Customer.updateAccountBalance).toHaveBeenCalledWith(1, 900);
+        expect(Customer.updateAccountBalance).toHaveBeenCalledWith(2, 600);
+
+        expect(Customer.registerTransaction).toHaveBeenCalledWith(1, 2, 100, 'transfer');
+
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith({ message: 'Transfer successful', newBalance: 900 });
+    });
+});
