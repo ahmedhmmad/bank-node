@@ -40,4 +40,12 @@ describe("Register", () => {
 
 
   });
+
+  it('should return 403 if role is not customer, and no authorization header', async () => {
+    req.body.role = 'admin';
+    await register(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(403);
+    expect(res.json).toHaveBeenCalledWith({ message: 'Only customers can be registered without authorization' });
+  });
 });
