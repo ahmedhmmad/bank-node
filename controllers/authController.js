@@ -62,10 +62,9 @@ const register = async (req, res) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const connection = await db.getConnection();
+       
         await saveUser(username, hashedPassword, role);
-        connection.release();
-
+        
         res.status(201).json({ message: "User registered successfully" });
     } catch (error) {
         console.error('Error registering user:', error);
@@ -121,4 +120,4 @@ const getUserByusername = async (username) => {
     }
 };
 
-module.exports = { login, register, getUserByusername };
+module.exports = { login, register, getUserByusername,saveUser };
